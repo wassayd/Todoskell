@@ -10,11 +10,13 @@ import Data.Aeson.Text (encodeToLazyText)
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Char8 as C
+import Lib 
 
 data Todo = Todo {
     todo :: Text 
    ,isDone :: Bool 
 } deriving (Show, Generic, ToJSON, FromJSON)
+
 
 
 jsonFile :: FilePath
@@ -24,13 +26,18 @@ exempleTodo :: Todo
 exempleTodo = Todo { todo = "learn haskell", isDone = False } 
 
 main :: IO ()
-main = I.writeFile jsonFile $ encodeToLazyText exempleTodo
+main = do    
+    Prelude.putStrLn "Commands:"
+    Prelude.putStrLn "+ <String> - Add a TODO entry"
+    Prelude.putStrLn "- <Int>    - Delete the numbered entry"
+    Prelude.putStrLn "s <Int>    - Show the numbered entry"
+    Prelude.putStrLn "e <Int>    - Edit the numbered entry"
+    Prelude.putStrLn "l          - List todo"
+    Prelude.putStrLn "r          - Reverse todo"
+    Prelude.putStrLn "c          - Clear todo"
+    Prelude.putStrLn "q          - Quit"
+ 
 
  
 getJSON :: IO B.ByteString
 getJSON = B.readFile jsonFile
-
- 
-decodeJSON :: IO ()
-decodeJSON = do json <- getJSON
-                Prelude.putStrLn $ C.unpack json
