@@ -36,6 +36,7 @@ main = do
     Prelude.putStrLn "r          - Reverse todo"
     Prelude.putStrLn "c          - Clear todo"
     Prelude.putStrLn "q          - Quit"
+    Prelude.putStrLn "h          - Help"
  
 
  
