@@ -60,6 +60,20 @@ main = do
 getJSON :: IO B.ByteString
 getJSON = B.readFile jsonFile
 
-
+ 
 saveTodo ::  ToJSON a => a -> B.ByteString
 saveTodo = encode
+
+addTodo = undefined
+
+deleteTodo = undefined
+
+showTodo = undefined
+
+editTodo = undefined
+
+listTodo = undefined
+
+reverseTodo = undefined
+
+clearTodo = undefined
