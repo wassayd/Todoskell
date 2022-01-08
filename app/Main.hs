@@ -60,7 +60,11 @@ main = do
 getJSON :: IO B.ByteString
 getJSON = B.readFile jsonFile
 
- 
+
+decodeJSON = do
+    json <- getJSON
+    Prelude.putStr json
+
 saveTodo ::  ToJSON a => a -> B.ByteString
 saveTodo = encode
 
