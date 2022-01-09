@@ -72,8 +72,8 @@ saveTodo :: Todo -> IO ()
 saveTodo a = do
     todos <- decodeJSON
     case todos of 
-        Just todosArr  -> B.writeFile jsonFile (encode (todosArr ++ [a]))
-        Nothing        -> B.writeFile jsonFile (encode [a] )
+        Just todosArr  -> B.writeFile jsonFile $ encode $ todosArr ++ [a]
+        Nothing        -> B.writeFile jsonFile $ encode [a] 
     
  
     
