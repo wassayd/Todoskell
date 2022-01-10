@@ -6,6 +6,7 @@ module Main where
 import GHC.Generics ( Generic )
 import Data.Aeson ( ToJSON, encode, FromJSON, decode )
 import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString as BS
 import Data.String (IsString)
 
 data Todo = Todo {
@@ -66,6 +67,15 @@ main = do
 
 getJSON :: IO B.ByteString
 getJSON = B.readFile jsonFile
+
+getStrictJSON :: IO BS.ByteString
+getStrictJSON = BS.readFile jsonFile
+
+decodeStrictJSON :: IO (Maybe [Todo])
+decodeStrictJSON = do
+    jsonData <- getStrictJSON
+    let rse = decode jsonData
+    return rse
 
 decodeJSON :: IO (Maybe [Todo])
 decodeJSON = do
