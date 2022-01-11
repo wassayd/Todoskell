@@ -5,9 +5,10 @@ module Main where
 
 import GHC.Generics ( Generic )
 import Data.Aeson ( ToJSON, encode, FromJSON, decode )
-import qualified Data.ByteString.Lazy as B
-import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy.Char8  as B
+import qualified Data.ByteString.Char8  as BS
 import Data.String (IsString)
+import Data.Maybe (catMaybes, fromMaybe)
 
 data Todo = Todo {
     pos     :: Int,
@@ -74,7 +75,7 @@ getStrictJSON = BS.readFile jsonFile
 decodeStrictJSON :: IO (Maybe [Todo])
 decodeStrictJSON = do
     jsonData <- getStrictJSON
-    let rse = decode jsonData
+    let rse = decode (B.fromChunks [jsonData])
     return rse
 
 decodeJSON :: IO (Maybe [Todo])
@@ -83,24 +84,21 @@ decodeJSON = do
     let rse = decode jsonData
     return rse
 
-
-
-
 countTodos :: IO Int
-countTodos = maybe 0 length <$> decodeJSON
+countTodos = maybe 0 length <$> decodeStrictJSON
 
 saveTodo :: Todo -> IO ()
 saveTodo a = do
     todos <- decodeJSON
     case todos of
         Just todosArr  -> B.writeFile jsonFile $ encode $ todosArr ++ [a]
-        Nothing        -> B.writeFile jsonFile $encode [a]
+        Nothing        -> B.writeFile jsonFile $ encode [a]
 
 
 
 addTodo :: IO ()
 addTodo = do
-    putStrLn "Ecrire todo fast"
+    putStrLn "Todo"
     str <- getLine
     todo <- createTodo str
     saveTodo todo
@@ -108,7 +106,27 @@ addTodo = do
 
 deleteTodo = undefined
 
-showTodo = undefined
+
+
+ 
+ 
+showTodo :: IO ()
+showTodo = do
+    todoPos <- getLine
+    test <- decodeJSON
+    todos <- getAllTodos
+    let todo = (!!1) $ filter (check $ read todoPos) todos
+    putStrLn "todo"
+
+
+
+
+
+getAllTodos :: IO [Todo]
+getAllTodos = Data.Maybe.fromMaybe [] <$> decodeJSON
+
+check :: Int -> Todo -> Bool
+check posCheck (Todo pos _ _) = pos == posCheck
 
 editTodo = undefined
 
@@ -116,4 +134,5 @@ listTodo = undefined
 
 reverseTodo = undefined
 
-clearTodo = undefined
+clearTodo :: IO () -- Todo: add validation
+clearTodo = B.writeFile jsonFile ""
