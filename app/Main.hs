@@ -106,9 +106,6 @@ addTodo = do
 
 deleteTodo = undefined
 
-
-
- 
  
 showTodo :: IO ()
 showTodo = do
@@ -117,9 +114,6 @@ showTodo = do
     todos <- getAllTodos
     let todo = (!!1) $ filter (check $ read todoPos) todos
     putStrLn "todo"
-
-
-
 
 
 getAllTodos :: IO [Todo]
