@@ -106,15 +106,16 @@ addTodo = do
 
 deleteTodo = undefined
 
- 
-showTodo :: IO ()
-showTodo = do
+  
+showTodo :: IO Todo
+showTodo = getTodo
+
+getTodo = do
     todoPos <- getLine
     test <- decodeJSON
     todos <- getAllTodos
     let todo = (!!1) $ filter (check $ read todoPos) todos
-    putStrLn "todo"
-
+    return todo
 
 getAllTodos :: IO [Todo]
 getAllTodos = Data.Maybe.fromMaybe [] <$> decodeJSON
