@@ -30,9 +30,9 @@ isArgValid "quit"     = True
 isArgValid "help"     = True
 isArgValid _          = False
 
+
 jsonFile :: FilePath
 jsonFile = "todos.json"
-
 
 
 createTodo :: String -> IO Todo
@@ -52,6 +52,7 @@ displayCommands = do
     putStrLn "clear              - Clear todo"
     putStrLn "quit               - Quit"
     putStrLn "help               - Help"
+
 
 main :: IO ()
 main = do
@@ -95,7 +96,6 @@ saveTodo a = do
         Nothing        -> B.writeFile jsonFile $ encode [a]
 
 
-
 addTodo :: IO ()
 addTodo = do
     putStrLn "Todo"
@@ -106,13 +106,12 @@ addTodo = do
 
 deleteTodo = undefined
 
-  
 showTodo :: IO Todo
 showTodo = getTodo
 
+getTodo :: IO Todo
 getTodo = do
     todoPos <- getLine
-    test <- decodeJSON
     todos <- getAllTodos
     let todo = (!!1) $ filter (check $ read todoPos) todos
     return todo
