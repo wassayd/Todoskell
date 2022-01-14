@@ -95,6 +95,8 @@ saveTodo a = do
         Just todosArr  -> B.writeFile jsonFile $ encode $ todosArr ++ [a]
         Nothing        -> B.writeFile jsonFile $ encode [a]
 
+saveTodos :: [Todo] -> [IO ()]
+saveTodos = map saveTodo 
 
 addTodo :: IO ()
 addTodo = do
@@ -126,7 +128,9 @@ editTodo = undefined
 
 listTodo = undefined
 
-reverseTodo = undefined
+ 
+reverseTodo :: IO [Todo]
+reverseTodo = reverse <$> getAllTodos
 
 clearTodo :: IO () -- Todo: add validation
 clearTodo = B.writeFile jsonFile ""
