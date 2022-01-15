@@ -121,6 +121,9 @@ getTodo = do
 getAllTodos :: IO [Todo]
 getAllTodos = Data.Maybe.fromMaybe [] <$> decodeJSON
 
+getAllTodoStrict :: IO [Todo]
+getAllTodoStrict = Data.Maybe.fromMaybe [] <$> decodeStrictJSON
+
 check :: Int -> Todo -> Bool
 check posCheck (Todo pos _ _) = pos == posCheck
 
@@ -128,9 +131,10 @@ editTodo = undefined
 
 listTodo = undefined
 
- 
-reverseTodo :: IO [Todo]
-reverseTodo = reverse <$> getAllTodos
-
+  
+reverseTodo = do 
+    todos <- reverse <$> getAllTodoStrict
+    B.writeFile jsonFile $ encode todos
+    
 clearTodo :: IO () -- Todo: add validation
 clearTodo = B.writeFile jsonFile ""
