@@ -115,7 +115,7 @@ getTodo :: IO Todo
 getTodo = do
     todoPos <- getLine
     todos <- getAllTodos
-    let todo = (!!1) $ filter (check $ read todoPos) todos
+    let todo = (!!0) $ filter (check $ read todoPos) todos
     return todo
 
 getAllTodos :: IO [Todo]
