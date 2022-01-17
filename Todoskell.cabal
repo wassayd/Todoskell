@@ -35,6 +35,7 @@ library
     , base >=4.7 && <5
     , bytestring
     , text
+    , unicode-show
   default-language: Haskell2010
 
 executable Todoskell-exe
@@ -50,6 +51,7 @@ executable Todoskell-exe
     , base >=4.7 && <5
     , bytestring
     , text
+    , unicode-show
   default-language: Haskell2010
 
 test-suite Todoskell-test
@@ -66,4 +68,5 @@ test-suite Todoskell-test
     , base >=4.7 && <5
     , bytestring
     , text
+    , unicode-show
   default-language: Haskell2010

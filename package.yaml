@@ -24,6 +24,7 @@ dependencies:
 - aeson
 - text
 - bytestring
+- unicode-show
 
 library:
   source-dirs: src

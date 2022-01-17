@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE UnicodeSyntax #-}
 
 module Main where
 
@@ -9,14 +10,16 @@ import qualified Data.ByteString.Lazy.Char8  as B
 import qualified Data.ByteString.Char8  as BS
 import Data.String (IsString)
 import Data.Maybe (catMaybes, fromMaybe)
+import Text.Show.Unicode (ushow)
 
 data Todo = Todo {
     pos     :: Int,
     todo    :: String ,
     isDone  :: Bool
-} deriving (Show, Generic, ToJSON, FromJSON)
+} deriving (Generic, ToJSON, FromJSON)
 
-
+instance Show Todo where
+  show (Todo a b c) = ushow "Id : " ++ show a ++ " Todo : " ++ show b ++ " IsDone " ++  if c then ushow '✅' else ushow '❌'
 
 isArgValid :: (Eq a, IsString a) => a -> Bool
 isArgValid "add"      = True
@@ -96,7 +99,7 @@ saveTodo a = do
         Nothing        -> B.writeFile jsonFile $ encode [a]
 
 saveTodos :: [Todo] -> [IO ()]
-saveTodos = map saveTodo 
+saveTodos = map saveTodo
 
 addTodo :: IO ()
 addTodo = do
@@ -131,10 +134,10 @@ editTodo = undefined
 
 listTodo = undefined
 
-  
-reverseTodo = do 
+
+reverseTodo = do
     todos <- reverse <$> getAllTodoStrict
     B.writeFile jsonFile $ encode todos
-    
+
 clearTodo :: IO () -- Todo: add validation
 clearTodo = B.writeFile jsonFile ""
