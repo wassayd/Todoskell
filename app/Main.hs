@@ -19,7 +19,7 @@ data Todo = Todo {
 } deriving (Generic, ToJSON, FromJSON)
 
 instance Show Todo where
-  show (Todo a b c) = ushow "Id : " ++ show a ++ " Todo : " ++ show b ++ " IsDone " ++  if c then ushow '✅' else ushow '❌'
+  show (Todo a b c) = show "Id : " ++ show a ++ " Todo : " ++ show b ++ " IsDone " ++ ushow (if c then  '✅' else  '❌')
 
 isArgValid :: (Eq a, IsString a) => a -> Bool
 isArgValid "add"      = True
