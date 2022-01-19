@@ -21,6 +21,10 @@ data Todo = Todo {
 instance Show Todo where
   show (Todo a b c) = show "Id : " ++ show a ++ " Todo : " ++ show b ++ " IsDone " ++ ushow (if c then  '✅' else  '❌')
 
+instance Eq Todo where
+   Todo pos _ _ == Todo pos2 _ _ = pos == pos2
+
+
 isArgValid :: (Eq a, IsString a) => a -> Bool
 isArgValid "add"      = True
 isArgValid "delete"   = True
@@ -98,8 +102,12 @@ saveTodo a = do
         Just todosArr  -> B.writeFile jsonFile $ encode $ todosArr ++ [a]
         Nothing        -> B.writeFile jsonFile $ encode [a]
 
-saveTodos :: [Todo] -> [IO ()]
-saveTodos = map saveTodo
+saveTodos :: [Todo] -> IO ()
+saveTodos a = do
+    todos <- decodeJSON
+    case todos of
+        Just todosArr  -> B.writeFile jsonFile $ encode $ todosArr ++ a
+        Nothing        -> B.writeFile jsonFile $ encode a
 
 addTodo :: IO ()
 addTodo = do
@@ -109,7 +117,12 @@ addTodo = do
     saveTodo todo
 
 
-deleteTodo = undefined
+deleteTodo :: IO ()
+deleteTodo = do
+    todo <- getTodo
+    todos <- filter (/=todo) <$> getAllTodoStrict
+    clearTodo
+    saveTodos todos
 
 showTodo :: IO Todo
 showTodo = getTodo
@@ -117,7 +130,7 @@ showTodo = getTodo
 getTodo :: IO Todo
 getTodo = do
     todoPos <- getLine
-    todos <- getAllTodos
+    todos <- getAllTodoStrict
     let todo = (!!0) $ filter (check $ read todoPos) todos
     return todo
 
