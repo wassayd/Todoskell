@@ -145,7 +145,8 @@ check posCheck (Todo pos _ _) = pos == posCheck
 
 editTodo = undefined
 
-listTodo = undefined
+listTodo = fmap show getAllTodoStrict
+
 
 
 reverseTodo = do
