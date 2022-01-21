@@ -124,6 +124,13 @@ deleteTodo = do
     clearTodo
     saveTodos todos
 
+deleteTodoById :: Int -> IO ()
+deleteTodoById pos = do
+    todo <- getTodoById pos
+    todos <- filter (/=todo) <$> getAllTodoStrict
+    clearTodo
+    saveTodos todos
+
 showTodo :: IO Todo
 showTodo = getTodo
 
@@ -132,6 +139,12 @@ getTodo = do
     todoPos <- getLine
     todos <- getAllTodoStrict
     let todo = (!!0) $ filter (check $ read todoPos) todos
+    return todo
+
+getTodoById :: Int -> IO Todo 
+getTodoById todoPos = do
+    todos <- getAllTodoStrict
+    let todo = (!!0) $ filter (check todoPos) todos
     return todo
 
 getAllTodos :: IO [Todo]
@@ -143,11 +156,15 @@ getAllTodoStrict = Data.Maybe.fromMaybe [] <$> decodeStrictJSON
 check :: Int -> Todo -> Bool
 check posCheck (Todo pos _ _) = pos == posCheck
 
-editTodo = undefined
+editTodo :: IO ()
+editTodo = do
+    (Todo pos tods done) <- getTodo
+    putStrLn "Modify todo"
+    newTodoStr <- getLine 
+    deleteTodoById pos
+    saveTodo Todo {pos = pos, todo = newTodoStr, isDone = done }
 
 listTodo = fmap show getAllTodoStrict
-
-
 
 reverseTodo = do
     todos <- reverse <$> getAllTodoStrict
