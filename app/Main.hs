@@ -61,17 +61,37 @@ displayCommands = do
     putStrLn "help               - Help"
 
 
-main :: IO ()
+
+
+main ::IO (Either Todo (Either String ()))
 main = do
     displayCommands
     arg <- getLine
-    putStrLn $ "Vous avez saisie " ++ arg
     if isArgValid arg
         then
             case arg of
-                "add" -> addTodo
-                _     -> putStrLn "Une erreur c'est produite"
-        else putStrLn "Invalid"
+                "add" -> do
+                    addTodo
+                    main
+                "delete" -> do
+                    deleteTodo
+                    main
+                "show"  -> Left <$> showTodo
+                "edit" -> do
+                    editTodo
+                    return $ Right $ Right ()
+                "list" -> Right . Left <$> listTodo
+                "reverse" -> do
+                    reverseTodo
+                    return $ Right $ Right ()
+                "clear" -> do
+                    clearTodo
+                    return $ Right $ Right ()
+                "quit" -> return $ Right $ Right ()
+                _     -> return $ Right $ Right ()
+        else do
+            putStrLn "Argument invalid" 
+            return $ Right $ Right ()
 
 
 getJSON :: IO B.ByteString
@@ -111,7 +131,7 @@ saveTodos a = do
 
 addTodo :: IO ()
 addTodo = do
-    putStrLn "Todo"
+    putStrLn "Add your todo :"
     str <- getLine
     todo <- createTodo str
     saveTodo todo
@@ -136,12 +156,13 @@ showTodo = getTodo
 
 getTodo :: IO Todo
 getTodo = do
+    putStrLn "Enter Todo's id"
     todoPos <- getLine
     todos <- getAllTodoStrict
     let todo = (!!0) $ filter (check $ read todoPos) todos
     return todo
 
-getTodoById :: Int -> IO Todo 
+getTodoById :: Int -> IO Todo
 getTodoById todoPos = do
     todos <- getAllTodoStrict
     let todo = (!!0) $ filter (check todoPos) todos
@@ -160,12 +181,14 @@ editTodo :: IO ()
 editTodo = do
     (Todo pos tods done) <- getTodo
     putStrLn "Modify todo"
-    newTodoStr <- getLine 
+    newTodoStr <- getLine
     deleteTodoById pos
     saveTodo Todo {pos = pos, todo = newTodoStr, isDone = done }
 
+listTodo :: IO String
 listTodo = fmap show getAllTodoStrict
 
+reverseTodo :: IO ()
 reverseTodo = do
     todos <- reverse <$> getAllTodoStrict
     B.writeFile jsonFile $ encode todos
