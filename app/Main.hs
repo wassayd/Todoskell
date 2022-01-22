@@ -72,10 +72,10 @@ main = do
             case arg of
                 "add" -> do
                     addTodo
-                    main
+                    return $ Right $ Right ()
                 "delete" -> do
                     deleteTodo
-                    main
+                    return $ Right $ Right ()
                 "show"  -> Left <$> showTodo
                 "edit" -> do
                     editTodo
