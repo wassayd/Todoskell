@@ -89,9 +89,8 @@ main = do
                     return $ Right $ Right ()
                 "quit" -> return $ Right $ Right ()
                 _     -> return $ Right $ Right ()
-        else do
-            putStrLn "Argument invalid" 
-            return $ Right $ Right ()
+        else do  
+            return $ Right $ Left "Argument invalid"
 
 
 getJSON :: IO B.ByteString
