@@ -58,9 +58,6 @@ displayCommands = do
     putStrLn "reverse            - Reverse todo"
     putStrLn "clear              - Clear todo"
     putStrLn "quit               - Quit"
-    putStrLn "help               - Help"
-
-
 
 
 main ::IO (Either Todo (Either String ()))
